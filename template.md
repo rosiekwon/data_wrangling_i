@@ -134,7 +134,11 @@ litters_df =
 
 ``` r
 pups_df = 
-  read_csv("data/FAS_pups.csv", na = c("NA", ".", ""), skip=3) 
+  read_csv(
+    "data/FAS_pups.csv", 
+    na = c("NA", ".", ""), 
+    skip=3
+  ) 
 ```
 
     ## Rows: 313 Columns: 6
@@ -165,7 +169,7 @@ mlb_df =
 Import LotR word counts
 
 ``` r
-fort_df = 
+fotr_df = 
   read_excel("data/LotR_Words.xlsx", range = "B3:D6")
 ```
 
@@ -187,4 +191,10 @@ pulse_df =
 litters_df_base =
   read.csv("data/FAS_litters.csv")
 # it doesn't print the dataset neatly
+```
+
+## What about data exporting?
+
+``` r
+write_csv(fotr_df, "data/fotr.csv")
 ```
