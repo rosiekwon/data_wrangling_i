@@ -16,6 +16,11 @@ library(tidyverse)
     ## ✖ dplyr::lag()    masks stats::lag()
     ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 
+``` r
+library(readxl) #for excel
+library(haven) #for sas
+```
+
 Let’s import a dataset.
 
 ``` r
@@ -108,3 +113,78 @@ Data summary
 | pups_born_alive |         0 |             1 |  7.35 | 1.76 |   3 |   6 |   8 |   8 |   11 | ▁▃▂▇▁ |
 | pups_dead_birth |         0 |             1 |  0.33 | 0.75 |   0 |   0 |   0 |   0 |    4 | ▇▂▁▁▁ |
 | pups_survive    |         0 |             1 |  6.41 | 2.05 |   1 |   5 |   7 |   8 |    9 | ▁▃▂▇▇ |
+
+## Fix the missingness
+
+``` r
+litters_df =
+  read_csv("data/FAS_litters.csv", na = c("NA", ".", ""))
+```
+
+    ## Rows: 49 Columns: 8
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (2): Group, Litter Number
+    ## dbl (6): GD0 weight, GD18 weight, GD of Birth, Pups born alive, Pups dead @ ...
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+## Import pups data
+
+``` r
+pups_df = 
+  read_csv("data/FAS_pups.csv", na = c("NA", ".", ""), skip=3) 
+```
+
+    ## Rows: 313 Columns: 6
+    ## ── Column specification ────────────────────────────────────────────────────────
+    ## Delimiter: ","
+    ## chr (1): Litter Number
+    ## dbl (5): Sex, PD ears, PD eyes, PD pivot, PD walk
+    ## 
+    ## ℹ Use `spec()` to retrieve the full column specification for this data.
+    ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+
+``` r
+#skip the first three rows
+
+pups_df = 
+  janitor::clean_names(pups_df)
+```
+
+## Import excel files
+
+CSVs are really great but sometimes you get an excel file.
+
+``` r
+mlb_df =
+  read_excel("data/mlb11.xlsx")
+```
+
+Import LotR word counts
+
+``` r
+fort_df = 
+  read_excel("data/LotR_Words.xlsx", range = "B3:D6")
+```
+
+## Import SAS files
+
+Import the PULSE data
+
+``` r
+pulse_df = 
+  read_sas("data/public_pulse_data.sas7bdat")
+
+pulse_df = 
+  janitor::clean_names(pulse_df)
+```
+
+## Why do I hate read.csv so much?
+
+``` r
+litters_df_base =
+  read.csv("data/FAS_litters.csv")
+# it doesn't print the dataset neatly
+```

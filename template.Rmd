@@ -5,6 +5,8 @@ output: github_document
 
 ```{r}
 library(tidyverse)
+library(readxl) #for excel
+library(haven) #for sas
 ```
 
 Let's import a dataset.
@@ -37,5 +39,65 @@ Somtimes skimming data is neat?
 
 ```{r}
 skimr::skim(litters_df)
+```
+
+
+## Fix the missingness
+
+```{r}
+litters_df =
+  read_csv("data/FAS_litters.csv", na = c("NA", ".", ""))
+
+```
+
+
+## Import pups data
+
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv", na = c("NA", ".", ""), skip=3) 
+#skip the first three rows
+
+pups_df = 
+  janitor::clean_names(pups_df)
+```
+
+
+
+## Import excel files
+
+CSVs are really great but sometimes you get an excel file.
+```{r}
+mlb_df =
+  read_excel("data/mlb11.xlsx")
+```
+
+Import LotR word counts
+
+```{r}
+fort_df = 
+  read_excel("data/LotR_Words.xlsx", range = "B3:D6")
+```
+
+
+## Import SAS files 
+
+Import the PULSE data
+
+```{r}
+pulse_df = 
+  read_sas("data/public_pulse_data.sas7bdat")
+
+pulse_df = 
+  janitor::clean_names(pulse_df)
+```
+
+
+## Why do I hate read.csv so much?
+
+```{r, eval=FALSE}
+litters_df_base =
+  read.csv("data/FAS_litters.csv")
+# it doesn't print the dataset neatly
 ```
 
