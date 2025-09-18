@@ -126,3 +126,77 @@ Filter to include only pups with PD walk less than 11 and sex 2
 filter(pups_df, pd_walk < 11, sex == 2)
 ```
 
+## `mutate`
+
+use `mutate()` to create or modify variables.
+
+```{r}
+mutate(
+  litters_df,
+  wt_gain = gd18_weight - gd0_weight,
+  group = str_to_lower(group) #make variables of group column to lower case
+   )
+```
+
+
+## `arrange`
+
+`arrange` arranges things
+
+```{r}
+arrange(litters_df, desc(pups_born_alive)) #descending 
+arrange(litters_df, group, pups_born_alive)
+```
+
+
+## PIPES
+
+Let's see a bad way to do things
+
+```{r}
+litters_df =
+  read_csv("data/FAS_litters.csv", na = c("NA", ".", ""))
+
+litters_df = 
+  janitor::clean_names(litters_df)
+
+litters_df = 
+  select(litters_df, group, litter_number, starts_with("gd"))
+
+litters_df = 
+  drop_na(litters_df)
+```
+
+Use pipes to avoid all this
+
+```{r}
+litters_df = 
+  read_csv("data/FAS_litters.csv", na = c("NA", ".", "")) |> 
+  janitor::clean_names() |>  
+  select(group, litter_number, starts_with("gd")) |>  
+  drop_na() |>  
+  mutate(
+    wt_gain = gd18_weight - gd0_weight
+  )
+```
+
+
+Learning Assessment: Write a chain of commands that:
+
+loads the pups data
+cleans the variable names
+filters the data to include only pups with sex 1
+removes the PD ears variable
+creates a variable that indicates whether PD pivot is 7 or more days
+
+```{r}
+pups_df = 
+  read_csv("data/FAS_pups.csv", skip = 3, na = c("NA", ".", "")) |> 
+  janitor::clean_names() |> 
+  filter(sex == 1) |> 
+  select(-pd_ears) |> 
+  mutate(
+    pd_7 = pd_pivot >= 7 
+  )
+```
+
